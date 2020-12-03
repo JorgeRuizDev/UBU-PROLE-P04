@@ -1,0 +1,22 @@
+** Operaciones "complejas"
+COMPUTE x = 288+20*6+5
+
+DISPLAY 11111111
+
+COMPUTE y = 27 - 3 * x + 4 - 1 * 1
+
+DISPLAY 33333333 
+
+COMPUTE Y = 1/1 + 9/3
+
+DISPLAY 22222222
+** IF sin Else
+IF a
+    COMPUTE c = 1
+END-IF
+
+DISPLAY 33333333
+
+** Evaluate vacío
+EVALUATE x
+END-EVALUATE

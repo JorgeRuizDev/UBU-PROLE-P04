@@ -1,0 +1,39 @@
+	valori a
+	mete 8
+	asigna
+	valori b
+	mete 3
+	asigna
+LBL0
+	valord a
+	siciertovea LBL1
+	valori a
+	valord a
+	mete 1
+	sub
+	asigna
+	valord a
+	print
+	valord b
+	mete 4
+	sub
+	sifalsovea LBL2
+	mete 2
+	valord a
+	mul
+	print
+	vea LBL3
+LBL2
+	valord a
+	mete 2
+	div
+	print
+LBL3
+	vea LBL0
+LBL1
+	valord a
+	print
+	valord a
+	valord b
+	sum
+	print
