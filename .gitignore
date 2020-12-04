@@ -3,3 +3,5 @@ y.tab.*
 diagrama.tab.c
 src/compilador
 src/compilador
+src/compilador_bison copy.y
+compilador
