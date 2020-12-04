@@ -50,32 +50,49 @@ axioma: sentences;
 sentences: sentences sent | sent;
 
 
-sent: 		  assig | proc;
+sent: 		  assig 
+			| proc
+			;
 
 assig:		  COMPUTE ID EQUALS arithexp
-			| MOVE NUM TO ID;
+			| MOVE idornum TO ID
+			;
+
+
+idornum:	  ID
+			| NUM;
 
 proc: 		  IF arithexp sentences elseopt
-			| EVALUATE ID whenclause END_EVAL
+			| EVALUATE ID whenclauses END_EVAL
 			| PERFORM UNTIL arithexp sentences END_PERF
-			| DISPLAY arithexp;
+			| DISPLAY arithexp
+			;
+
+whenclauses: /*empty*/
+			| whenclauses whenclause
+			;
 
 elseopt: 	  ELSE sentences END_IF
-			| END_IF;
+			| END_IF
+			;
 
-whenclause:   WHEN arithexp sentences;
+whenclause:   WHEN arithexp sentences
+			;
 
 arithexp: 	  arithexp ADD multexp
 			| arithexp SUB multexp
-			| multexp;
+			| multexp
+			;
 
 multexp: 	  multexp MULT value
 			| multexp DIV value
-			| value;
+			| value
+			;
 
 value: 		  NUM 
 			| ID 
-			| PAR_OP arithexp PAR_CL;
+			| PAR_OP arithexp PAR_CL
+			;
 
 
 %%
