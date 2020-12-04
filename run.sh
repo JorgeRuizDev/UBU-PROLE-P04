@@ -21,4 +21,4 @@ check_err "GCC"
 
 cd .. 
 
-./src/compilador $1
+./src/compilador ./input_files/$1

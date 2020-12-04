@@ -62,8 +62,9 @@ int main(int argc, char** argv){
 		yyin = file;
     }
     else{
-        yyin = stdin;
+        //yyin = stdin;
 		printf("Type the code bellow:\n");
     }
+	
 	yyparse();
 }
