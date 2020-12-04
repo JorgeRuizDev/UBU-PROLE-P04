@@ -22,14 +22,14 @@ CHAR [a-zA-Z]
 ({DIG})+	return NUM;
 "IF"		return IF;
 "ELSE"		return ELSE;
-"ENDIF"		return END_IF;
+"END-IF"	return END_IF;
 "WHEN"		return WHEN;
 "COMPUTE"	return COMPUTE;
 "MOVE"		return MOVE;
 "EVALUATE"	return EVALUATE;
-"ENDEVAL"	return END_EVAL;
+"END-EVAL"	return END_EVAL;
 "PERFORM"	return PERFORM;
-"ENDPERF"	return END_PERF;
+"END-PERF"	return END_PERF;
 "UNTIL"		return UNTIL;
 "DISPLAY"	return DISPLAY;
 "TO"		return TO;
@@ -39,6 +39,9 @@ CHAR [a-zA-Z]
 "-"			return SUB;
 "*"			return MULT;
 "/"			return DIV;
+
+"("			return PAR_OP;
+")"			return PAR_CL;
 {CHAR}({CHAR}|{DIG})*	return ID;
 
 
@@ -47,5 +50,4 @@ CHAR [a-zA-Z]
 [ \t\r\n]	;
 "#".*		;
 
-.			printf("TOKEN %s IS UNDEFINED\n", yytext); return yytext[0];
 %%

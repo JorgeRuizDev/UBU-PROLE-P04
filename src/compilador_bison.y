@@ -39,7 +39,7 @@ int get_next_label(){
 
 %}
 
-%token NUM IF ELSE END_IF WHEN COMPUTE MOVE EVALUATE END_EVAL PERFORM END_PERF UNTIL DISPLAY TO EQUALS ADD SUB MULT DIV ID
+%token NUM IF ELSE END_IF WHEN COMPUTE MOVE EVALUATE END_EVAL PERFORM END_PERF UNTIL DISPLAY TO EQUALS ADD SUB MULT DIV ID PAR_OP PAR_CL
 %left ADD SUB
 %left MULT DIV
 
@@ -47,35 +47,35 @@ int get_next_label(){
 
 axioma: sentences;
 
-sentences: 	sentences
-			| sent;
+sentences: sentences sent | sent;
 
-sent:		 assig | proc;
 
-assig: 		COMPUTE ID EQUALS arithexp
+sent: 		  assig | proc;
+
+assig:		  COMPUTE ID EQUALS arithexp
 			| MOVE NUM TO ID;
 
-proc: 		IF arithexp sentences elseopt
+proc: 		  IF arithexp sentences elseopt
 			| EVALUATE ID whenclause END_EVAL
 			| PERFORM UNTIL arithexp sentences END_PERF
 			| DISPLAY arithexp;
 
-elseopt: 	ELSE sentences END_IF
+elseopt: 	  ELSE sentences END_IF
 			| END_IF;
 
-whenclause: WHEN arithexp sentences;
-			
-arithexp:	| arithexp ADD multexp
+whenclause:   WHEN arithexp sentences;
+
+arithexp: 	  arithexp ADD multexp
 			| arithexp SUB multexp
 			| multexp;
 
-multexp:	| multexp MULT value
+multexp: 	  multexp MULT value
 			| multexp DIV value
 			| value;
 
-value:		NUM | ID | '(' arithexp ')';
-
-
+value: 		  NUM 
+			| ID 
+			| PAR_OP arithexp PAR_CL;
 
 
 %%

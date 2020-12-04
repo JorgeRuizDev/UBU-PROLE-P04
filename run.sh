@@ -16,7 +16,7 @@ check_err "FLEX"
 bison -yd compilador_bison.y $1
 check_err "BISON"
 
-gcc lex.yy.c y.tab.c -o compilador -lfl
+gcc lex.yy.c y.tab.c -o compilador -lfl -DYYDEBUG
 check_err "GCC"
 
 cd .. 
