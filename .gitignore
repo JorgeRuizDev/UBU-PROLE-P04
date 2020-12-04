@@ -1,2 +1,4 @@
 lex.yy.c
 y.tab.*
+diagrama.tab.c
+src/compilador

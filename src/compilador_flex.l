@@ -47,5 +47,5 @@ CHAR [a-zA-Z]
 [ \t\r\n]	;
 "#".*		;
 
-.			printf("TOKEN %s IS UNDEFINED\n", yytext);
+.			printf("TOKEN %s IS UNDEFINED\n", yytext); return yytext[0];
 %%

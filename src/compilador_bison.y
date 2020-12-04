@@ -17,6 +17,9 @@ Consideraciones:
 #define RED     "\033[31m"
 #define RESET   "\033[0m"
 
+//DEBUG:
+//gcc ... -lfl -DYYDEBUG
+int yydebug = 1;
 
 //File:
 extern FILE *yyin;
@@ -29,7 +32,7 @@ int yylex();
 int label_count = 0;
 
 int get_next_label(){
-	return label_count ++;
+	return label_count++;
 }
 
 
@@ -37,9 +40,42 @@ int get_next_label(){
 %}
 
 %token NUM IF ELSE END_IF WHEN COMPUTE MOVE EVALUATE END_EVAL PERFORM END_PERF UNTIL DISPLAY TO EQUALS ADD SUB MULT DIV ID
+%left ADD SUB
+%left MULT DIV
+
 %%
 
-axioma: NUM ;
+axioma: sentences;
+
+sentences: 	sentences
+			| sent;
+
+sent:		 assig | proc;
+
+assig: 		COMPUTE ID EQUALS arithexp
+			| MOVE NUM TO ID;
+
+proc: 		IF arithexp sentences elseopt
+			| EVALUATE ID whenclause END_EVAL
+			| PERFORM UNTIL arithexp sentences END_PERF
+			| DISPLAY arithexp;
+
+elseopt: 	ELSE sentences END_IF
+			| END_IF;
+
+whenclause: WHEN arithexp sentences;
+			
+arithexp:	| arithexp ADD multexp
+			| arithexp SUB multexp
+			| multexp;
+
+multexp:	| multexp MULT value
+			| multexp DIV value
+			| value;
+
+value:		NUM | ID | '(' arithexp ')';
+
+
 
 
 %%
@@ -51,7 +87,7 @@ void yyerror(const char * s){
 
 
 int main(int argc, char** argv){
-	
+
 	if(argc > 1) {
 		FILE *file;
 		file = fopen(argv[1], "r");
@@ -59,10 +95,11 @@ int main(int argc, char** argv){
 			fprintf(stderr, "Can't open %s, please, check if the file exists.\n", argv[1]);
 			exit(1);
 		}
+		printf("Loading File...\n");
 		yyin = file;
     }
     else{
-        //yyin = stdin;
+        yyin = stdin;
 		printf("Type the code bellow:\n");
     }
 	
