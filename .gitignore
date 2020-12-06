@@ -5,3 +5,4 @@ src/compilador
 src/compilador
 src/compilador_bison copy.y
 compilador
+out.txt

@@ -19,7 +19,7 @@ Consideraciones:
 
 //DEBUG:
 //gcc ... -lfl -DYYDEBUG
-int yydebug = 1;
+int yydebug = 0;
 
 //File:
 extern FILE *yyin;
@@ -31,6 +31,7 @@ int yylex();
 
 int label_count = 0;
 
+
 int get_next_label(){
 	return label_count++;
 }
@@ -39,7 +40,13 @@ int get_next_label(){
 
 %}
 
-%token NUM IF ELSE END_IF WHEN COMPUTE MOVE EVALUATE END_EVAL PERFORM END_PERF UNTIL DISPLAY TO EQUALS ADD SUB MULT DIV ID PAR_OP PAR_CL
+%union{
+	int num;
+	char* id;
+	char* str;
+}
+
+%token <num>NUM IF ELSE END_IF WHEN COMPUTE MOVE EVALUATE END_EVAL PERFORM END_PERF UNTIL DISPLAY TO EQUALS ADD SUB MULT DIV <id>ID PAR_OP PAR_CL
 %left ADD SUB
 %left MULT DIV
 
@@ -54,43 +61,131 @@ sent: 		  assig
 			| proc
 			;
 
-assig:		  COMPUTE ID EQUALS arithexp
-			| MOVE idornum TO ID
+assig:		  //COMPUTE statement		
+			  COMPUTE
+			  ID 
+			  { printf("\tvalori %s\n", $<id>2); }
+			  EQUALS 
+			  arithexp
+			  { printf("\tasigna\n");}
+
+			//MOVE statement
+			| MOVE
+			  idornum 
+			  TO 
+			  ID
+			  { printf("\tvalori %s\n%s\n\tasigna\n", $<id>4, $<id>2); } 
 			;
 
+			/*
+				ID or NUM statement.
+			*/	
+idornum:	  
+			  ID	
+			  {
+				char out [100];
+				sprintf(out, "\tvalord %s", $<id>1);
 
-idornum:	  ID
-			| NUM;
+				$<str>$ = out;
+			  }
+			| NUM	
+			  {
+				char out [100];
+				sprintf(out, "\tmete %d", $<num>1);
 
-proc: 		  IF arithexp sentences elseopt
+				$<str>$ = out;
+			  }
+
+			;
+
+proc: 		  
+			  // If Statement
+			  IF 
+			  arithexp 
+			  {
+				//$3
+				// If FALSE (0) - Jump to "ELSE"
+
+				int else_label = get_next_label();
+				printf("\tsifalsovea LBL%d\n",else_label);
+				$<num>$ = else_label;
+			  }
+			  sentences 
+			  {
+				//$5
+				// End of the IF statement: jump to "END-IF";
+
+				int endif_label = get_next_label();
+				printf("\tvea LBL%d\n", endif_label);
+				$<num>$ = endif_label;
+			  }
+			  {
+				  //$6
+				  //ELSE landing point:
+				  printf("LBL%d\n",$<num>3);
+			  }
+			  elseopt
+			  {
+				//$8
+				//END-IF landing point:
+				printf("LBL%d\n", $<num>5);
+			  }
+
 			| EVALUATE ID whenclauses END_EVAL
-			| PERFORM UNTIL arithexp sentences END_PERF
-			| DISPLAY arithexp
+
+			| PERFORM 
+			  {
+				//$2
+				int perform_label = get_next_label();
+				printf("LBL%d\n", perform_label);
+				$<num>$ = perform_label;
+			  }
+			  UNTIL 
+			  arithexp 
+			  {
+				//$5
+				int perform_end_label = get_next_label();
+				printf("\tsiciertovea LBL%d\n", perform_end_label);
+				$<num>$ = perform_end_label;
+			  }
+			  sentences
+			  END_PERF
+			  {
+				//$8
+				printf("\tvea LBL%d\n",$<num>2 );
+				printf("LBL%d\n", $<num>5);
+			  }
+
+			| DISPLAY 
+			  arithexp
+			  { printf("\tprint\n"); }
 			;
 
 whenclauses: /*empty*/
 			| whenclauses whenclause
 			;
 
-elseopt: 	  ELSE sentences END_IF
+elseopt: 	  ELSE
+			  sentences
+			  END_IF
 			| END_IF
 			;
 
 whenclause:   WHEN arithexp sentences
 			;
 
-arithexp: 	  arithexp ADD multexp
-			| arithexp SUB multexp
+arithexp: 	  arithexp ADD multexp {printf("\tsum\n");}
+			| arithexp SUB multexp {printf("\tsub\n");}
 			| multexp
 			;
 
-multexp: 	  multexp MULT value
-			| multexp DIV value
+multexp: 	  multexp MULT value {printf("\tmul\n");}
+			| multexp DIV value  {printf("\tdiv\n");}
 			| value
 			;
 
-value: 		  NUM 
-			| ID 
+value: 		  NUM {printf("\tmete %d\n", $<num>1);} 
+			| ID  {printf("\tvalord %s\n", $<id>1);}
 			| PAR_OP arithexp PAR_CL
 			;
 

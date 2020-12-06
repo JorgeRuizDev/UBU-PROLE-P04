@@ -29,5 +29,5 @@ cd ..
 if [[ $2 = "" ]]; then
 	./src/compilador
 else
-	./src/compilador ./input_files/$2
+	./src/compilador ./input_files/$2 | tee out.txt
 fi

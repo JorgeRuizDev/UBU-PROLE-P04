@@ -1,0 +1,2 @@
+MOVE 8 TO a           ** asignación a <- 8
+MOVE a TO a

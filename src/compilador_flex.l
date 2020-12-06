@@ -19,30 +19,30 @@ CHAR [a-zA-Z]
 
 
 %%
-({DIG})+		return NUM;
-"IF"			return IF;
-"ELSE"			return ELSE;
-"END-IF"		return END_IF;
-"WHEN"			return WHEN;
-"COMPUTE"		return COMPUTE;
-"MOVE"			return MOVE;
-"EVALUATE"		return EVALUATE;
-"END-EVALUATE"	return END_EVAL;
-"PERFORM"		return PERFORM;
-"END-PERFORM"	return END_PERF;
-"UNTIL"			return UNTIL;
-"DISPLAY"		return DISPLAY;
-"TO"			return TO;
+({DIG})+		{yylval.num = atoi(yytext);}	return NUM;
+"IF"											return IF;
+"ELSE"											return ELSE;
+"END-IF"										return END_IF;
+"WHEN"											return WHEN;
+"COMPUTE"										return COMPUTE;
+"MOVE"											return MOVE;
+"EVALUATE"										return EVALUATE;
+"END-EVALUATE"									return END_EVAL;
+"PERFORM"										return PERFORM;
+"END-PERFORM"									return END_PERF;
+"UNTIL"											return UNTIL;
+"DISPLAY"										return DISPLAY;
+"TO"											return TO;
 
-"="				return EQUALS;
-"+"				return ADD;
-"-"				return SUB;
-"*"				return MULT;
-"/"				return DIV;
+"="												return EQUALS;
+"+"												return ADD;
+"-"												return SUB;
+"*"												return MULT;
+"/"												return DIV;
 
-"("				return PAR_OP;
-")"				return PAR_CL;
-{CHAR}({CHAR}|{DIG})*	return ID;
+"("												return PAR_OP;
+")"												return PAR_CL;
+{CHAR}({CHAR}|{DIG})*	{yylval.id=yytext;}		return ID;
 
 
 
