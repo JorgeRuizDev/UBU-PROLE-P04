@@ -1,2 +1,3 @@
-MOVE 8 TO a           ** asignación a <- 8
-MOVE a TO a
+EVALUATE x
+    WHEN 1   DISPLAY 100
+END-EVALUATE

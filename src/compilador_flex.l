@@ -17,7 +17,6 @@ Consideraciones:
 DIG [0-9]
 CHAR [a-zA-Z]
 
-
 %%
 ({DIG})+		{yylval.num = atoi(yytext);}	return NUM;
 "IF"											return IF;

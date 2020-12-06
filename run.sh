@@ -8,6 +8,8 @@ check_err(){
 	fi
 }
 
+echo "To run: $ bash run.sh \"\" exampleX.txt"
+
 cd ./src
 
 flex compilador_flex.l

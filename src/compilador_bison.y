@@ -131,7 +131,28 @@ proc:
 				printf("LBL%d\n", $<num>5);
 			  }
 
-			| EVALUATE ID whenclauses END_EVAL
+
+
+
+
+			| EVALUATE 
+			  ID //$2 , $- if accessing from whenclauses -> whenclause
+			  {
+				//$3
+				//$- if accessing from whenclauses -> whenclause:
+				//END-EVALUATE jump LABEL:
+				$<num>$ = get_next_label();
+			  }
+			  whenclauses
+		  	  END_EVAL
+			  {
+				//$5
+				printf("LBL%d\n", $<num>3);
+			  }
+
+
+
+
 
 			| PERFORM 
 			  {
@@ -161,9 +182,7 @@ proc:
 			  { printf("\tprint\n"); }
 			;
 
-whenclauses: /*empty*/
-			| whenclauses whenclause
-			;
+
 
 elseopt: 	  ELSE
 			  sentences
@@ -171,7 +190,38 @@ elseopt: 	  ELSE
 			| END_IF
 			;
 
-whenclause:   WHEN arithexp sentences
+whenclauses: /*empty*/
+
+			| whenclauses whenclause
+			;
+
+whenclause:   
+              {
+			    //$1
+				// Evaluate X:
+				printf("\tvalord %s\n", $<id>-3);
+			  }
+			  WHEN 
+			  arithexp
+			  {
+				//$4
+				// Check if the "Case" is True:
+				int next_when_label = get_next_label();
+				printf("\tsub\n");
+				printf("\tsifalsovea LBL%d\n", next_when_label);
+				// export the label:
+				$<num>$ = next_when_label;
+			  } 
+			  sentences
+			  {
+				//$6
+				// Skip the rest of the WHEn statements, jump to END-EVALUATE
+				printf("\tvea LBL%d\n", $<num>-3);
+
+				// Next "Case" label:
+				printf("LBL%d\n", $<num>4);
+
+			  }
 			;
 
 arithexp: 	  arithexp ADD multexp {printf("\tsum\n");}
